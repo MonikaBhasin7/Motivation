@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1025088360062",
+    "firebase_url": "https://motivation1-10bf9.firebaseio.com",
+    "project_id": "motivation1-10bf9",
+    "storage_bucket": "motivation1-10bf9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025088360062:android:d91d4b8fddcc27e2",
+        "android_client_info": {
+          "package_name": "com.techsdm.motivation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025088360062-k12h2edhl425aa92b65iaf2vkfp7t2rc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARhrLIy09K-m5NdQY2kL1kM9wtl3L5Uhg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
