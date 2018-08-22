@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.techsdm.motivation.Model.WallpaperItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.provider.Telephony.Carriers.PASSWORD;
 
 /**
@@ -17,7 +22,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME="User.db";
     public static final String TABLE_NAME="Favorite_data";
-    public static final String ID="ID";
     public static String IMAGE="IMAGE";
 
     public DatabaseHelper(Context context) {
@@ -27,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,IMAGE TEXT)");
+        db.execSQL("create table " + TABLE_NAME + "(IMAGE TEXT)");
     }
 
     @Override
@@ -35,36 +39,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public long add_data(String image)
+    public Boolean add_data(String image_data)
     {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv=new ContentValues();
-        cv.put("IMAGE",image);
+        cv.put("IMAGE",image_data);
         long res=db.insert(TABLE_NAME,null,cv);
-        return res;
+        if(res == -1)
+            return false;
+        else
+            return true;
     }
 
-
-    public Cursor getAllData() {
+    public boolean check(String category_name)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + TABLE_NAME, null);
-        return res;
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);
+
+        if(res.moveToFirst())
+        {
+            do {
+                String a=res.getString(res.getColumnIndex(IMAGE));
+
+                if(category_name.equals(a))
+                {
+                    return true;
+                }
+            }while (res.moveToNext());
+
+        }
+        return false;
     }
 
-    public int check_data(String image)
+    public List<WallpaperItem> getCarts()
+    {
+        List<WallpaperItem> result;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);
+        result = new ArrayList<>();
+
+
+        if(res.moveToFirst())
+        {
+            do {
+                String a=res.getString(res.getColumnIndex(IMAGE));
+                WallpaperItem wallpaperItem=new WallpaperItem(a);
+                result.add(wallpaperItem);
+
+            }while (res.moveToNext());
+
+        }
+        return result;
+    }
+
+    public void delete(String image_name)
     {
         SQLiteDatabase db=this.getWritableDatabase();
-        //"SELECT * FROM MyTable WHERE " + username + " =? AND" + password + " =?", null
-        String Query="SELECT * FROM +"+TABLE_NAME+ "WHERE"+ IMAGE + "=" + image;
-        Cursor cursor = db.rawQuery(Query, null);
-        if(cursor.getCount()!=0)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
+        //db.delete(TABLE_NAME, IMAGE + "=" + image_name, null);
+        db.delete(TABLE_NAME, IMAGE+ "=?", new String[]{String.valueOf(image_name)});
     }
 
 }

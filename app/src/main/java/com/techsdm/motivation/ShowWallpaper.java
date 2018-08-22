@@ -37,6 +37,7 @@ import java.io.IOException;
 
 public class ShowWallpaper extends AppCompatActivity {
 
+    String gofavorite="0";
     Animation favoriteButtonSelect;
     ImageView favorite_uncheck_button;
     ImageView favorite_check_button;
@@ -50,8 +51,8 @@ public class ShowWallpaper extends AppCompatActivity {
     FloatingActionButton fab_share;
     String a;
     ImageView imageView;
-    String w_data;
-    String w_data1;
+    String w_data=null;
+    String w_data1=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +79,11 @@ public class ShowWallpaper extends AppCompatActivity {
         Bundle bundle=getIntent().getExtras();
         w_data=bundle.getString("name");
         w_data1=bundle.getString("category_name");
-        w_data=w_data.trim();
-        //Toast.makeText(getApplicationContext(),"url->"+w_data,Toast.LENGTH_SHORT).show();
+        if(w_data1==null)
+        {
+            gofavorite="1";
+        }
+        //Toast.makeText(getApplicationContext(),"w_data1"+w_data1,Toast.LENGTH_SHORT).show();
 
         imageView=(ImageView)findViewById(R.id.imageView);
 
@@ -112,14 +116,17 @@ public class ShowWallpaper extends AppCompatActivity {
                     }
                 });
 
-        int res=checkdb();
-        if(res==1)
+
+
+        DatabaseHelper dbs=new DatabaseHelper(getBaseContext());
+        Boolean check1=dbs.check(w_data);
+        if(check1==true)
         {
             favorite_check_button.setVisibility(View.VISIBLE);
             favorite_uncheck_button.setVisibility(View.GONE);
             favorite_check_button.startAnimation(favoriteButtonSelect);
         }
-        else if(res==0)
+        else if(check1==false)
         {
             favorite_check_button.setVisibility(View.GONE);
             favorite_uncheck_button.setVisibility(View.VISIBLE);
@@ -128,38 +135,38 @@ public class ShowWallpaper extends AppCompatActivity {
 
     }
 
-    public int checkdb()
+
+    public void favorite_uncheck_button_click(View view)     //For Check
     {
-        DatabaseHelper db=new DatabaseHelper(this);
-        int res=db.check_data(w_data.toString().trim());
-        return res;
-    }
-    public void add_data_db()
-    {
-        DatabaseHelper db=new DatabaseHelper(this);
-        int resi= (int) db.add_data(w_data.toString().trim());
-        if(resi!=0)
-        {
-            Toast.makeText(getApplicationContext(),"Added to Favorites",Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void favorite_uncheck_button_click(View view)
-    {
-        int res=checkdb();
-        if(res==0)
-        {
-            add_data_db();
-        }
         favorite_check_button.setVisibility(View.VISIBLE);
         favorite_uncheck_button.setVisibility(View.GONE);
         favorite_check_button.startAnimation(favoriteButtonSelect);
+
+        DatabaseHelper dbs=new DatabaseHelper(getBaseContext());
+
+        Boolean check=dbs.add_data(w_data);
+        if(check==true)
+        {
+            Toast.makeText(getApplicationContext(),"Added to Favorites",Toast.LENGTH_SHORT).show();
+        }
+        else {
+         Toast.makeText(getApplicationContext(),"Error in Adding",Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
 
-    public void favorite_check_button_click(View view)
+    public void favorite_check_button_click(View view)   //For Uncheck
     {
         favorite_check_button.setVisibility(View.GONE);
         favorite_uncheck_button.setVisibility(View.VISIBLE);
         favorite_uncheck_button.startAnimation(favoriteButtonSelect);
+
+        DatabaseHelper dbs=new DatabaseHelper(getBaseContext());
+        w_data=w_data.toString().trim();
+        dbs.delete(w_data);
+
 
     }
     @Override
@@ -167,11 +174,20 @@ public class ShowWallpaper extends AppCompatActivity {
         super.onBackPressed();
 
         //overridePendingTransition(R.anim.anime_slide_in_left, R.anim.anime_slide_in_right);
-        Intent intent=new Intent(ShowWallpaper.this,ListWallpaper.class);
-        Bundle bundle=new Bundle();
-        bundle.putString("name",w_data1);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if(gofavorite.equals("1"))
+        {
+            Intent intent=new Intent(getApplicationContext(),Tabbed_Activity.class);
+            startActivity(intent);
+        }
+        else if(!w_data1.equals(null))
+        {
+            Intent intent=new Intent(getApplicationContext(),ListWallpaper.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("name",w_data1);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
     }
     public void fab_add_click(View view)
     {
