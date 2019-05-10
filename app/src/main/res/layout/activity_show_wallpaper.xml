@@ -2,32 +2,147 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.techsdm.motivation.ShowWallpaper">
+    android:background="@drawable/gradient1"
+    tools:context=".ShowWallpaper">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_height="60dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/favorite_uncheck_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:onClick="favorite_uncheck_button_click"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_favorite_uncheck" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/favorite_check_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:onClick="favorite_check_button_click"
+                android:visibility="invisible"
+                android:layout_alignParentRight="true"
+                app:srcCompat="@drawable/ic_favorite_check" />
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lt_loading_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        app:lottie_fileName="cycle_animation.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        app:lottie_fileName="water_loader.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"/>
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/app_bar"
-        app:srcCompat="@drawable/common_full_open_on_phone" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_centerInParent="true"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="left|bottom|end"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
+        android:layout_marginLeft="18dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/userphoto"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/colorPrimaryDark"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name"
+                android:fontFamily="@font/margella"
+                android:textSize="15dp"
+                android:padding="3dp"
+                android:textColor="@color/textcolor"
+                android:layout_marginLeft="5dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/textcolor"
+                android:textSize="8dp"
+                android:text="By Unsplash"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="78dp"
+        android:layout_height="76dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="14dp"
         android:layout_marginEnd="18dp"
+        android:backgroundTint="@color/colorPrimary"
         android:onClick="fab_add_click"
-        app:rippleColor="@color/colorAccent"
-        android:background="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_add" />
 
     <android.support.design.widget.FloatingActionButton
@@ -41,8 +156,7 @@
         android:layout_marginEnd="18dp"
         android:visibility="invisible"
         android:onClick="fab_download_click"
-        app:rippleColor="@color/colorAccent"
-        android:background="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_download" />
 
     <android.support.design.widget.FloatingActionButton
@@ -56,30 +170,22 @@
         android:layout_marginEnd="18dp"
         android:onClick="fab_share_click"
         android:visibility="invisible"
-        app:rippleColor="@color/colorAccent"
-        android:background="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_share" />
 
-    <ImageView
-        android:id="@+id/favorite_uncheck_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignEnd="@+id/fab_share"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:onClick="favorite_uncheck_button_click"
-        app:srcCompat="@drawable/ic_favorite_uncheck" />
-
-    <ImageView
-        android:id="@+id/favorite_check_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignEnd="@+id/fab_share"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:onClick="favorite_check_button_click"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="170dp"
+        android:layout_marginEnd="18dp"
+        android:onClick="fab_set_click"
         android:visibility="invisible"
-        app:srcCompat="@drawable/ic_favorite_check" />
+        android:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/set_wallpaper" />
 
 
 

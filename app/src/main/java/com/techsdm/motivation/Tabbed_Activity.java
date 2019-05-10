@@ -1,13 +1,9 @@
 package com.techsdm.motivation;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,15 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
+import android.widget.Toast;
 
-import android.widget.TextView;
+import com.techsdm.motivation.Common.Common;
 
-public class Tabbed_Activity extends AppCompatActivity{
+public class Tabbed_Activity extends AppCompatActivity implements android.support.v7.widget.SearchView.OnQueryTextListener{
 
 
 
+    android.support.v7.widget.SearchView search_view;
+    android.app.FragmentTransaction fragmentTransaction;
+    public android.app.FragmentManager fragmentManager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     TabHost tHost;
     private ViewPager mViewPager;
@@ -42,8 +44,12 @@ public class Tabbed_Activity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        fragmentManager=getFragmentManager();
+
+
+
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -57,6 +63,29 @@ public class Tabbed_Activity extends AppCompatActivity{
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        search_view= (android.support.v7.widget.SearchView) findViewById(R.id.search_view);
+        search_view.setOnQueryTextListener(this);
+        search_view.setOnCloseListener(new android.support.v7.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) search_view.getLayoutParams();
+                param.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                //set layout params to cause layout update
+                search_view.setLayoutParams(param);
+                return false;
+            }
+        });
+
+        search_view.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) search_view.getLayoutParams();
+                param.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                //set layout params to cause layout update
+                search_view.setLayoutParams(param);
+            }
+        });
+
 
 
 
@@ -64,8 +93,11 @@ public class Tabbed_Activity extends AppCompatActivity{
         //
         // setupTabIcons();
 
-    }
+        fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null).commit();
 
+
+    }
 
 
     /*private void setupTabIcons() {
@@ -95,6 +127,19 @@ public class Tabbed_Activity extends AppCompatActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Common.search_query=query;
+        Intent intent=new Intent(getApplicationContext(),FindActivity.class);
+        startActivity(intent);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
 
@@ -151,15 +196,17 @@ public class Tabbed_Activity extends AppCompatActivity{
             switch (position) {
                 case 0:
                     fragment = new Tab1();
+
+
                     break;
 
                 case 1:
                     fragment = new Tab2();
                     break;
 
-                case 2:
+                /*case 2:
                     fragment = new Tab3();
-                    break;
+                    break;*/
 
             }
             return fragment;
@@ -168,7 +215,8 @@ public class Tabbed_Activity extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+           // return 3;
+            return 2;
         }
 
         @Nullable
@@ -176,11 +224,11 @@ public class Tabbed_Activity extends AppCompatActivity{
         public CharSequence getPageTitle(int position) {
             switch (position){
                 case 0:
-                    return "Category";
+                    return "Popular";
                 case 1:
-                    return "Recent";
-                case 2:
-                    return "Favorites";
+                    return "Collection";
+                /*case 2:
+                    return "Favorites";*/
             }
             return null;
         }

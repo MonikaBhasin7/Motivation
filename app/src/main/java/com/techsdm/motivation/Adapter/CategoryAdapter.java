@@ -1,5 +1,6 @@
 package com.techsdm.motivation.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.techsdm.motivation.Model.CategoryItem;
 import com.techsdm.motivation.R;
+import com.techsdm.motivation.Tab1;
 
 import java.util.List;
 
@@ -24,10 +29,16 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>{
 
+    RequestOptions option;
+    Context mContext;
     private List<CategoryItem> categoryList;
 
-    public CategoryAdapter(List<CategoryItem> categoryList) {
+    public CategoryAdapter(List<CategoryItem> categoryList,Context mContext) {
         this.categoryList = categoryList;
+        this.mContext=mContext;
+
+        //Request Option for Glide
+        option=new RequestOptions().centerCrop().placeholder(R.drawable.button_shape_download).error(R.drawable.ic_wallpaper_black_24dp);
     }
 
     @Override
@@ -38,13 +49,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     @Override
-    public void onBindViewHolder(final CategoryAdapter.CategoryViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoryViewHolder holder, int position) {
         final CategoryItem categoryItem=categoryList.get(position);
 
-        Picasso.get()
+
+
+
+       /* Picasso.get()
                 .load(categoryItem.getImageLink())
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .rotate(90f)
+                .resize(500,500)
+                .centerInside()
                 .into(holder.image, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -68,7 +82,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                                     }
                                 });
                     }
-                });
+                });*/
+       Glide.with(mContext).load(categoryItem.getImageLink()).apply(option).into(holder.image);
         holder.name.setText(categoryItem.getName());
     }
 
